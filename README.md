@@ -83,7 +83,7 @@ app.post('/test-endpoint', async (req, res, next) => {
       eventName: 'FileUpload',
     });
 
-    // ..ile handling
+    // file handling ...
 
     rewipe.end({
       eventName: 'FileUpload',
