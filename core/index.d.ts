@@ -6,4 +6,6 @@ declare module 'rewipe-js' {
   export function end(params: IRewipeEndParams): Promise<void>;
 
   export function getEvent(eventName: string): IRewipeEvent[];
+
+  export function getEventMemoryInsights(eventPayload: IRewipeEvent): string;
 }
