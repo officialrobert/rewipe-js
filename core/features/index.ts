@@ -58,9 +58,9 @@ export const getEventMemoryInsights = (eventPayload: IRewipeEvent): string => {
     );
 
     if (diffMeta?.type === 'increase') {
-      return `${diffMeta?.percent}% increase`;
+      return `${diffMeta?.percent?.toFixed(2)}% increase`;
     } else if (diffMeta?.type === 'decrease') {
-      return `${diffMeta?.percent}% decrease`;
+      return `${diffMeta?.percent?.toFixed(2)}% decrease`;
     } else {
       return 'No change';
     }
