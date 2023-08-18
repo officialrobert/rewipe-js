@@ -1,6 +1,6 @@
-import { init, rewipeStorage } from './store';
+import { init, rewipeStorage } from '../store';
 import { isEmpty } from 'lodash';
-import { IRewipeCoreConfig, IRewipeEndParams, IRewipeRunParams } from './types';
+import { IRewipeCoreConfig, IRewipeEndParams, IRewipeRunParams } from '../types';
 
 export const config = (params: IRewipeCoreConfig) => {
   init(params);
