@@ -15,8 +15,8 @@ class RuntimeStorage {
   eventsRecord: Record<string, IRewipeEvent[]> = {};
 
   constructor(params: IRewipeCoreConfig) {
-    this.apiKey = params?.apiKey;
-    this.environment = params?.environment;
+    this.apiKey = params?.apiKey || '';
+    this.environment = params?.environment || 'development';
     this.projectId = params?.projectId || '';
     this.eventsRecord = { ...this.eventsRecord };
   }
