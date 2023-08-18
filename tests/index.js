@@ -17,7 +17,7 @@ const start = async () => {
   await end({ eventName });
 
   const memInfo = getEvent(eventName);
-  //   console.log('memInfo', memInfo);
+  console.log('memInfo', memInfo);
 };
 
 try {
