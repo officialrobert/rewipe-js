@@ -45,8 +45,21 @@ console.log(info);
 // sample log data
 const sampleInfoPayload = {
   eventName: 'SubmitCheckout',
-  startToEndMemoryInBytes: 2e7, // This means, it took 20 MB to complete checkout functionality from client's end
+  // This means, it took 20 MB-
+  // to complete checkout functionality from client's end
+  startToEndMemoryInBytes: 2e7,
   startMemoryInBytes: 1e7,
   endMemoryInBytes: 3e7,
 };
+```
+
+# Say goodbye to guessing which user experienced the app crash
+
+You can store either the user `id` or `email` so you can easily search from the dashboard which user experienced the crash.
+
+```js
+rewipe.run({
+  eventName: 'SubmitCheckout',
+  props: { email: 'user@mail.com', id: 'xxxx-user-id' },
+});
 ```

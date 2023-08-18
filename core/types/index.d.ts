@@ -11,6 +11,10 @@ interface IRewipeEvent {
   startToEndMemoryInBytes: number;
   startTimeUtc: string;
   endTimeUtc: string;
+  props?: {
+    email?: string;
+    id?: string;
+  };
 }
 
 interface IRewipeCoreConfig {
