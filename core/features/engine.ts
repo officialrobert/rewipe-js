@@ -1,5 +1,9 @@
 import { isUndefined } from 'lodash';
 
+/**
+ * Check code if running from nodejs
+ * @returns
+ */
 export const isNodeJsEnvironment = (): boolean => {
   try {
     return (
@@ -12,9 +16,13 @@ export const isNodeJsEnvironment = (): boolean => {
   }
 };
 
-export const isBrowserEnvironment = () => {
+/**
+ * Check code if running from browser
+ * @returns
+ */
+export const isBrowserEnvironment = (): boolean => {
   try {
-    return !isUndefined(window) && window.document;
+    return !isUndefined(window) && !isUndefined(window.document);
   } catch {
     return false;
   }

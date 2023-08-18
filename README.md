@@ -36,20 +36,32 @@ const onSubmitCheckout = (e) => {
 };
 ```
 
-> Manual track or you can check from an intuitive dashboard at `rewipe.run`
+> Manual track or you can check from an intuitive dashboard at `rewipe.run(soon)`
 
 ```js
 const info = rewipe.getEvent('SubmitCheckout');
-// console.log(info);
+// console.log(info[0]);
 
 // sample log data
 const sampleInfoPayload = {
   eventName: 'SubmitCheckout',
-  // This means, it took 20 MB-
+
+  // This means, it took 10 MB-
   // to complete checkout functionality from client's end
-  startToEndMemoryInBytes: 2e7,
-  startMemoryInBytes: 1e7,
-  endMemoryInBytes: 3e7,
+  start: {
+    // ...other props
+    unsupported: false,
+    // in bytes
+    heapTotal: 3e7,
+    usedHeap: 1e7,
+  },
+  end: {
+    // ...other props
+    unsupported: false,
+    usedHeap: 2e7,
+  },
+  startTimeIso: '2023-08-18T08:21:55.468Z',
+  endTimeIso: '2023-08-18T08:22:43.215Z',
 };
 ```
 
