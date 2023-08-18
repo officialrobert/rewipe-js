@@ -13,6 +13,7 @@ Rewipe JS SDK - Easily track and kill memory leak
 import * rewipe from 'rewipe-js';
 
 rewipe.config({
+    // apiKey and projectId not required for now
   apiKey: 'xxx-xxx',
   projectId: 'xxx-id',
   environment: 'development',
