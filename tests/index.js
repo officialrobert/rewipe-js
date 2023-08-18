@@ -1,4 +1,10 @@
-const { config, run, end, getEvent } = require('rewipe-js');
+const {
+  config,
+  run,
+  end,
+  getEvent,
+  getEventMemoryInsights,
+} = require('../dist');
 
 const start = async () => {
   let obj1 = {};
@@ -18,6 +24,8 @@ const start = async () => {
 
   const memInfo = getEvent(eventName);
   console.log('memInfo', memInfo);
+  console.log('\n\n');
+  console.log(getEventMemoryInsights(memInfo[0]));
 };
 
 try {
