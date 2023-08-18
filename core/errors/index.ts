@@ -9,3 +9,10 @@ export class InitConfigError extends BaseError {
     this.name = 'InitConfigError';
   }
 }
+
+export class FeatureError extends BaseError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'FeatureError';
+  }
+}

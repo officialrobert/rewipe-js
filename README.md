@@ -72,6 +72,34 @@ const sampleInfoPayload = {
 };
 ```
 
+# ExpressJS server
+
+```js
+const app = express();
+
+app.post('/test-endpoint', async (req, res, next) => {
+  try {
+    await rewipe.run({
+      eventName: 'FileUpload',
+    });
+
+    // ..ile handling
+
+    rewipe.end({
+      eventName: 'FileUpload',
+    });
+
+    console.log(
+      rewipe.getEventMemoryInsights(rewipe.getEvent('FileUpload')[0])
+    );
+
+    // 15% heap memory increase
+  } catch (err) {
+    next(err);
+  }
+});
+```
+
 # Say goodbye to guessing which user experienced the app crash
 
 You can store either the user `id` or `email` so you can easily search from the dashboard which user experienced the crash.
