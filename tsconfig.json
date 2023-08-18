@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "./core",
+    "strict": true
+  },
+  "include": ["core/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

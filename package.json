@@ -1,0 +1,26 @@
+{
+  "name": "rewipe-js",
+  "version": "1.0.2308.1801",
+  "description": "Rewipe JS SDK - Easily track and kill memory leak.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "tslib": "^2.6.1",
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.197",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/parser": "^6.4.0",
+    "eslint": "^8.47.0"
+  }
+}
