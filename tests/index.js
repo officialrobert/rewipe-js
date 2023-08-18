@@ -1,4 +1,4 @@
-const { config, run, end, getEvent } = require('../dist');
+const { config, run, end, getEvent } = require('rewipe-js');
 
 const start = async () => {
   let obj1 = {};
