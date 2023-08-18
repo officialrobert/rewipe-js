@@ -26,8 +26,8 @@ interface IRewipeEvent {
 }
 
 interface IRewipeCoreConfig {
-  apiKey: string;
-  environment: IRewipeEnvironment | string;
+  apiKey?: string;
+  environment?: IRewipeEnvironment | string;
   projectId?: string;
 }
 

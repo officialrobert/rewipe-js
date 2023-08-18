@@ -6,6 +6,7 @@ import {
   IRewipeEvent,
   IRewipeRunParams,
 } from '../types';
+import { InitConfigError } from '../errors';
 
 export const config = (params: IRewipeCoreConfig) => {
   init(params);
@@ -13,6 +14,10 @@ export const config = (params: IRewipeCoreConfig) => {
 
 export const run = async (params: IRewipeRunParams): Promise<void> => {
   const { eventName, props } = params;
+
+  if (!rewipeStorage) {
+    throw new InitConfigError(`Run 'config' function`);
+  }
 
   if (!isEmpty(eventName)) {
     // store event map
