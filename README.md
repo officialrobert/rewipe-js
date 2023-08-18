@@ -40,7 +40,7 @@ const onSubmitCheckout = (e) => {
 
 ```js
 const info = rewipe.getEvent('SubmitCheckout');
-console.log(info);
+// console.log(info);
 
 // sample log data
 const sampleInfoPayload = {
