@@ -8,7 +8,10 @@ import { isBrowserEnvironment, isNodeJsEnvironment } from './engine';
  */
 export const getMemoryUsage = async (): Promise<IRewipeMemoryInfo> => {
   try {
-    if (isBrowserEnvironment()) {
+    const isNodeJs = await isNodeJsEnvironment();
+    const isBrowser = await isBrowserEnvironment();
+
+    if (isBrowser) {
       // eslint-disable-next-line
       // @ts-ignore
       const memoryInfo = window.performance?.memory;
@@ -52,7 +55,7 @@ export const getMemoryUsage = async (): Promise<IRewipeMemoryInfo> => {
         usedHeap: memoryInfo?.usedJSHeapSize,
         heapTotal: memoryInfo?.totalJSHeapSize,
       };
-    } else if (isNodeJsEnvironment()) {
+    } else if (isNodeJs) {
       const processModule = await import('process');
       const memoryInfo = processModule.memoryUsage();
 
@@ -74,7 +77,9 @@ export const getMemoryUsage = async (): Promise<IRewipeMemoryInfo> => {
         unsupported: true,
       };
     }
-  } catch {
+  } catch (err: any) {
+    console.log('getMemoryUsage err', err?.message);
+
     return {
       unsupported: true,
     };

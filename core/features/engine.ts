@@ -4,14 +4,12 @@ import { isUndefined } from 'lodash';
  * Check code if running from nodejs
  * @returns
  */
-export const isNodeJsEnvironment = (): boolean => {
+export const isNodeJsEnvironment = async (): Promise<boolean> => {
   try {
-    return (
-      isUndefined(window) &&
-      !isUndefined(process) &&
-      process.release.name === 'node'
-    );
-  } catch {
+    const process = await import('process');
+
+    return !isUndefined(process);
+  } catch (err: any) {
     return false;
   }
 };
@@ -20,10 +18,10 @@ export const isNodeJsEnvironment = (): boolean => {
  * Check code if running from browser
  * @returns
  */
-export const isBrowserEnvironment = (): boolean => {
+export const isBrowserEnvironment = async (): Promise<boolean> => {
   try {
-    return !isUndefined(window) && !isUndefined(window.document);
-  } catch {
+    return !isUndefined(window) && !window.document;
+  } catch (err: any) {
     return false;
   }
 };
