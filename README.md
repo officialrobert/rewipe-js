@@ -7,6 +7,12 @@ Rewipe JS SDK - Easily track and kill memory leak
 > - Enable developers to track memory usage from JavaScript runtime (backend or frontend)
 > - Github Action integration so developers can test increase/decrease in memory usage for each PR that gets merged
 
+# Install
+
+```js
+npm i --save-dev rewipe-js
+```
+
 ## How it works
 
 ```js
