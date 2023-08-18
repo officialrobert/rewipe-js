@@ -22,13 +22,13 @@ rewipe.config({
 
 ```js
 // Example case
-const onSubmitCheckout = (e) => {
-  rewipe.run({
+const onSubmitCheckout = async (e) => {
+  await rewipe.run({
     eventName: 'SubmitCheckout',
   });
 
-  // @ your computation code here
-  // @
+  // your computation code here
+  // ...
 
   rewipe.end({
     eventName: 'SubmitCheckout',
