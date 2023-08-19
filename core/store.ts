@@ -21,19 +21,52 @@ class RuntimeStorage {
     this.eventsRecord = { ...this.eventsRecord };
   }
 
+  exportEventRecords(format: 'json' | 'array' = 'json') {
+    if (format === 'json') {
+      return this.eventsRecord;
+    } else if (format === 'array') {
+      const recorded = [];
+
+      for (const eventName in this.eventsRecord) {
+        const payload = head(this.eventsRecord[eventName]);
+
+        if (payload) {
+          recorded.push(payload);
+        }
+      }
+
+      return recorded;
+    }
+
+    return undefined;
+  }
+
+  clearEvent = (eventName: string) => {
+    eventName = trim(eventName);
+
+    if (!isEmpty(this.eventsRecord[eventName])) {
+      this.eventsRecord[eventName].length = 0;
+    }
+  };
+
   newEvent = async (eventName: string, props?: Record<string, any>) => {
     const memoryInfo = await getMemoryUsage();
 
     if (!memoryInfo?.unsupported && !isEmpty(memoryInfo)) {
       eventName = trim(eventName);
-      this.eventsRecord[eventName] = [
-        {
-          eventName,
-          start: memoryInfo,
-          startTimeIso: moment().toISOString(),
-          ...props,
-        },
-      ];
+
+      const existingEventRecord = this.eventsRecord[eventName];
+
+      if (!isEmpty(existingEventRecord)) {
+        existingEventRecord.length = 0;
+      }
+
+      this.eventsRecord[eventName].push({
+        eventName,
+        start: memoryInfo,
+        startTimeIso: moment().toISOString(),
+        ...props,
+      });
     }
   };
 
@@ -43,27 +76,28 @@ class RuntimeStorage {
     if (!memoryInfo?.unsupported && !isEmpty(memoryInfo)) {
       eventName = trim(eventName);
 
-      const initPayload = head(this.eventsRecord[eventName]);
+      const existingEventRecord = this.eventsRecord[eventName];
+      const existingPayload = existingEventRecord.pop();
 
-      if (!isEmpty(initPayload)) {
-        this.eventsRecord[eventName] = [
-          {
-            ...initPayload,
-            end: memoryInfo,
-            endTimeIso: moment().toISOString(),
-          },
-        ];
+      if (!isEmpty(existingPayload)) {
+        this.eventsRecord[eventName].push({
+          ...existingPayload,
+          end: memoryInfo,
+          endTimeIso: moment().toISOString(),
+        });
+
+        existingEventRecord.length = 0;
       }
     }
   };
 }
 
-let storage: RuntimeStorage;
+const storage: { instance?: RuntimeStorage | null } = { instance: undefined };
 
 const init = (params: RuntimeStorageParams) => {
-  if (!storage) {
-    storage = new RuntimeStorage(params);
-  }
+  storage.instance = new RuntimeStorage(params);
 };
 
-export { init, RuntimeStorage, storage as rewipeStorage };
+export const rewipeStorage = storage?.instance;
+
+export { init, RuntimeStorage };
