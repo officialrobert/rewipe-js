@@ -1,6 +1,6 @@
 {
   "name": "rewipe-js",
-  "version": "1.0.2308186",
+  "version": "1.0.2308191",
   "description": "Rewipe JS - Easily track and kill memory leak.",
   "main": "dist/index.js",
   "scripts": {
