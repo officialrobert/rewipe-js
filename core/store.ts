@@ -1,4 +1,4 @@
-import { head, isEmpty, trim } from 'lodash';
+import { head, isArray, isEmpty, trim } from 'lodash';
 import { getMemoryUsage } from './features/memory';
 import {
   IRewipeCoreConfig,
@@ -59,6 +59,8 @@ class RuntimeStorage {
 
       if (!isEmpty(existingEventRecord)) {
         existingEventRecord.length = 0;
+      } else if (!isArray(this.eventsRecord[eventName])) {
+        this.eventsRecord[eventName] = [];
       }
 
       this.eventsRecord[eventName].push({
@@ -80,13 +82,12 @@ class RuntimeStorage {
       const existingPayload = existingEventRecord.pop();
 
       if (!isEmpty(existingPayload)) {
+        this.eventsRecord[eventName].length = 0;
         this.eventsRecord[eventName].push({
           ...existingPayload,
           end: memoryInfo,
           endTimeIso: moment().toISOString(),
         });
-
-        existingEventRecord.length = 0;
       }
     }
   };
@@ -94,10 +95,12 @@ class RuntimeStorage {
 
 const storage: { instance?: RuntimeStorage | null } = { instance: undefined };
 
-const init = (params: RuntimeStorageParams) => {
-  storage.instance = new RuntimeStorage(params);
+export const init = (params: RuntimeStorageParams) => {
+  if (!storage.instance) {
+    storage.instance = new RuntimeStorage(params);
+  }
 };
 
-export const rewipeStorage = storage?.instance;
+export const getRewipeStorage = () => storage?.instance;
 
-export { init, RuntimeStorage };
+export { RuntimeStorage };

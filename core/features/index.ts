@@ -1,4 +1,4 @@
-import { init, rewipeStorage } from '../store';
+import { getRewipeStorage, init } from '../store';
 import { isEmpty } from 'lodash';
 import {
   IRewipeCoreConfig,
@@ -15,6 +15,7 @@ export const config = (params: IRewipeCoreConfig) => {
 
 export const run = async (params: IRewipeRunParams): Promise<void> => {
   const { eventName, props } = params;
+  const rewipeStorage = getRewipeStorage();
 
   if (!rewipeStorage) {
     throw new InitConfigError(`Run 'config' function`);
@@ -28,6 +29,7 @@ export const run = async (params: IRewipeRunParams): Promise<void> => {
 
 export const end = async (params: IRewipeEndParams): Promise<void> => {
   const { eventName } = params;
+  const rewipeStorage = getRewipeStorage();
 
   if (!isEmpty(eventName) && !isEmpty(rewipeStorage)) {
     await rewipeStorage.endEvent(eventName);
@@ -36,6 +38,8 @@ export const end = async (params: IRewipeEndParams): Promise<void> => {
 
 export const getEvent = (eventName: string): IRewipeEvent[] => {
   try {
+    const rewipeStorage = getRewipeStorage();
+
     if (eventName && !isEmpty(rewipeStorage)) {
       return rewipeStorage.eventsRecord[eventName] || [];
     }
@@ -47,6 +51,8 @@ export const getEvent = (eventName: string): IRewipeEvent[] => {
 };
 
 export const clearEvent = (eventName: string) => {
+  const rewipeStorage = getRewipeStorage();
+
   if (rewipeStorage && !isEmpty(eventName)) {
     rewipeStorage?.clearEvent(eventName);
   }
