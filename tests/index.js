@@ -6,10 +6,22 @@ const {
   getEventMemoryInsights,
 } = require('../dist');
 
-const start = async () => {
+const timeout = (ms) => {
+  return new Promise((resolve) => {
+    const _timeout = setTimeout(
+      () => {
+        clearTimeout(_timeout);
+        return resolve();
+      },
+      ms ? ms : 50
+    );
+  });
+};
+
+const start = async (iteration = 1) => {
   let obj1 = {};
   let obj2 = {};
-  const eventName = 'StartTest1Event';
+  const eventName = `StartTest${iteration}Event`;
 
   config({ environment: 'development' });
   await run({ eventName });
@@ -26,10 +38,17 @@ const start = async () => {
   console.log('memInfo', memInfo);
   console.log('\n\n');
   console.log(getEventMemoryInsights(memInfo[0]));
+  console.log('\n\n');
 };
 
 try {
-  start();
+  (async () => {
+    start(1);
+    await timeout(1_500);
+    start(1);
+    await timeout(500);
+    start(2);
+  })();
 } catch (err) {
   console.log(err?.message);
 }
