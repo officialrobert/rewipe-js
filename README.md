@@ -10,7 +10,7 @@ Rewipe JS SDK - Easily track and kill memory leak
 # Install
 
 ```js
-npm i --save-dev rewipe-js
+npm i rewipe-js
 ```
 
 ## How it works
