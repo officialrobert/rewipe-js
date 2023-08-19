@@ -4,19 +4,8 @@ const {
   end,
   getEvent,
   getEventMemoryInsights,
-} = require('../dist');
-
-const timeout = (ms) => {
-  return new Promise((resolve) => {
-    const _timeout = setTimeout(
-      () => {
-        clearTimeout(_timeout);
-        return resolve();
-      },
-      ms ? ms : 50
-    );
-  });
-};
+} = require('rewipe-js');
+const { timeout } = require('./utils');
 
 const start = async (iteration = 1) => {
   let obj1 = {};

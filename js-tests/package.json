@@ -1,15 +1,15 @@
 {
-  "name": "tests",
+  "name": "js-tests",
   "version": "1.0.0",
-  "description": "",
+  "description": "Raw js test",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "rewipe-js": "^1.0.2308181"
+    "rewipe-js": "^1.0.2308192"
   }
 }
