@@ -56,7 +56,7 @@ export const getMemoryUsage = async (): Promise<IRewipeMemoryInfo> => {
         heapTotal: memoryInfo?.totalJSHeapSize,
       };
     } else if (isNodeJs) {
-      const processModule = await import('process');
+      const processModule = require('process');
       const memoryInfo = processModule.memoryUsage();
 
       if (!memoryInfo) {

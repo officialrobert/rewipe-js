@@ -6,17 +6,16 @@ import { isNil, isUndefined } from 'lodash';
  */
 export const isNodeJsEnvironment = async (): Promise<boolean> => {
   try {
-    let nodeProcess: typeof process | undefined;
-
     try {
       if (window && !isUndefined(window)) {
         return false;
+      } else {
+        throw new Error('is node');
       }
     } catch {
-      nodeProcess = require('process');
+      const nodeProcess = require('process');
+      return !isUndefined(nodeProcess) && !isNil(nodeProcess);
     }
-
-    return !isUndefined(nodeProcess) && !isNil(nodeProcess);
   } catch (err: any) {
     return false;
   }
