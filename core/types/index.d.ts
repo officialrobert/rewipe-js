@@ -34,11 +34,10 @@ interface IRewipeCoreConfig {
   apiKey?: string;
   environment?: IRewipeEnvironment | string;
   projectId?: string;
+  verbose?: boolean | undefined;
 }
 
-interface RuntimeStorageParams extends IRewipeCoreConfig {
-  verbose?: boolean;
-}
+interface RuntimeStorageParams extends IRewipeCoreConfig {}
 
 interface IRewipeRunParams {
   eventName: string;
