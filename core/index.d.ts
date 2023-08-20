@@ -16,4 +16,12 @@ declare module 'rewipe-js' {
   ): IRewipeEvent[] | Record<string, IRewipeEvent[]> | null | undefined;
 
   export function RewipeStorage(): RuntimeStorage;
+
+  export function trackMemoryAndPromise<
+    E extends string,
+    CB extends (...args: any[]) => any
+  >(
+    eventName: E,
+    callback: CB
+  ): (...args: Parameters<CB>) => Promise<ReturnType<CB>>;
 }

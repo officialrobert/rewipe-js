@@ -104,3 +104,26 @@ export const getEventMemoryInsights = (eventPayload: IRewipeEvent): string => {
     return `Failed getEventMemoryInsights() err: ${err?.message}`;
   }
 };
+
+export const trackMemoryAndPromise = function <
+  E extends string,
+  CB extends (...args: any[]) => any
+>(
+  eventName: E,
+  callback: CB
+): (...args: Parameters<CB>) => Promise<ReturnType<CB>> {
+  return async (...args: Parameters<CB>): Promise<ReturnType<CB>> => {
+    const id = await run({ eventName });
+    const result = callback(...args);
+
+    if (result instanceof Promise) {
+      const res = await result;
+      await end({ id, eventName });
+
+      return res;
+    } else {
+      await end({ id, eventName });
+      return result;
+    }
+  };
+};

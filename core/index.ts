@@ -7,5 +7,6 @@ export {
   clearEvent,
   exportEventRecords,
   RewipeStorage,
+  trackMemoryAndPromise,
 } from './features';
 export { rewipeEnv } from './constants';
