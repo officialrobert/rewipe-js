@@ -19,12 +19,10 @@ npm i rewipe-js
 import * rewipe from 'rewipe-js';
 
 rewipe.config({
-    // apiKey and projectId not required for now
-  apiKey: 'xxx-xxx',
-  projectId: 'xxx-id',
-  environment: 'development',
+  environment: 'development', // 'development' | 'production' | 'stage'
+  eventsListCountLimit: 3, // max items to record per event
+  verbose: true  // allow logs
 });
-
 ```
 
 ```js
