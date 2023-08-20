@@ -8,7 +8,6 @@ import { isBrowserEnvironment, isNodeJsEnvironment } from './engine';
  */
 export const getMemoryUsage = async (): Promise<IRewipeMemoryInfo> => {
   try {
-    const isNodeJs = await isNodeJsEnvironment();
     const isBrowser = await isBrowserEnvironment();
 
     if (isBrowser) {
@@ -55,7 +54,11 @@ export const getMemoryUsage = async (): Promise<IRewipeMemoryInfo> => {
         usedHeap: memoryInfo?.usedJSHeapSize,
         heapTotal: memoryInfo?.totalJSHeapSize,
       };
-    } else if (isNodeJs) {
+    }
+
+    const isNodeJs = await isNodeJsEnvironment();
+
+    if (isNodeJs) {
       const processModule = require('process');
       const memoryInfo = processModule.memoryUsage();
 

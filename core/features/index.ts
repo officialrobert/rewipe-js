@@ -25,7 +25,8 @@ export const exportEventRecords = (
     }
 
     return null;
-  } catch {
+  } catch (err: any) {
+    console.log('Rewipejs: exportEventRecords() err:', err?.message);
     return null;
   }
 };

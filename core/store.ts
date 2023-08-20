@@ -75,6 +75,8 @@ class RuntimeStorage {
         startTimeIso: moment().toISOString(),
         ...props,
       });
+    } else if (this.verbose) {
+      console.log('Rewipejs: newEvent(): unsupported');
     }
   };
 
@@ -95,6 +97,8 @@ class RuntimeStorage {
           endTimeIso: moment().toISOString(),
         });
       }
+    } else if (this.verbose) {
+      console.log('Rewipejs: endEvent(): unsupported');
     }
   };
 }
