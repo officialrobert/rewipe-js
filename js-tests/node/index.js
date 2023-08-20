@@ -4,7 +4,7 @@ const {
   end,
   getEvent,
   getEventMemoryInsights,
-} = require('rewipe-js');
+} = require('../../dist');
 const { timeout } = require('./utils');
 
 const start = async (iteration = 1) => {
