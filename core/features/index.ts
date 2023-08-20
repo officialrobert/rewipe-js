@@ -33,7 +33,7 @@ export const exportEventRecords = (
 
 export const RewipeStorage = () => getRewipeStorage();
 
-export const run = async (params: IRewipeRunParams): Promise<void> => {
+export const run = async (params: IRewipeRunParams): Promise<string> => {
   const { eventName, props } = params;
   const rewipeStorage = getRewipeStorage();
 
@@ -43,16 +43,20 @@ export const run = async (params: IRewipeRunParams): Promise<void> => {
 
   if (!isEmpty(eventName)) {
     // store event map
-    await rewipeStorage?.newEvent(eventName, props);
+    const eventId = await rewipeStorage?.newEvent(eventName, props);
+
+    return eventId;
   }
+
+  return '';
 };
 
 export const end = async (params: IRewipeEndParams): Promise<void> => {
-  const { eventName } = params;
+  const { eventName, id } = params;
   const rewipeStorage = getRewipeStorage();
 
   if (!isEmpty(eventName) && !isEmpty(rewipeStorage)) {
-    await rewipeStorage.endEvent(eventName);
+    await rewipeStorage.endEvent(id, eventName);
   }
 };
 

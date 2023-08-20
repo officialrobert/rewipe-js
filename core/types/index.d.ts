@@ -18,6 +18,7 @@ interface IRewipeMemoryInfo {
 }
 
 interface IRewipeEvent {
+  id: string;
   eventName: IRewipeEnvironment | string;
   start: IRewipeMemoryInfo;
   startTimeIso: string;
@@ -31,6 +32,7 @@ interface IRewipeEvent {
 }
 
 interface IRewipeCoreConfig {
+  eventsListCountLimit?: number;
   apiKey?: string;
   environment?: IRewipeEnvironment | string;
   projectId?: string;
@@ -46,4 +48,5 @@ interface IRewipeRunParams {
 
 interface IRewipeEndParams {
   eventName: string;
+  id: string;
 }

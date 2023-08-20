@@ -1,19 +1,23 @@
-import { head, isArray, isEmpty, trim } from 'lodash';
+import { filter, head, isArray, isEmpty, isNumber, size, trim } from 'lodash';
 import { getMemoryUsage } from './features/memory';
 import {
   IRewipeCoreConfig,
   IRewipeEnvironment,
   IRewipeEvent,
+  IRewipeMemoryInfo,
   RuntimeStorageParams,
 } from './types';
+import { createId } from '@paralleldrive/cuid2';
 import * as moment from 'moment';
 
 class RuntimeStorage {
   apiKey: string;
   environment: IRewipeEnvironment | string;
   projectId: string;
+  eventsListCountLimit: number = 1;
   eventsRecord: Record<string, IRewipeEvent[]> = {};
   verbose?: boolean | undefined;
+  startMemoryInfo?: IRewipeMemoryInfo | null | undefined;
 
   constructor(params: IRewipeCoreConfig) {
     this.apiKey = params?.apiKey || '';
@@ -21,6 +25,13 @@ class RuntimeStorage {
     this.projectId = params?.projectId || '';
     this.eventsRecord = { ...this.eventsRecord };
     this.verbose = params?.verbose;
+
+    if (
+      isNumber(params?.eventsListCountLimit) &&
+      params?.eventsListCountLimit > 0
+    ) {
+      this.eventsListCountLimit = params.eventsListCountLimit;
+    }
   }
 
   exportEventRecords(format = 'json') {
@@ -34,10 +45,12 @@ class RuntimeStorage {
       const recorded = [];
 
       for (const eventName in this.eventsRecord) {
-        const payload = head(this.eventsRecord[eventName]);
+        for (let i = 0; i < size(this.eventsRecord[eventName]); i++) {
+          const payload = this.eventsRecord[eventName][i];
 
-        if (payload) {
-          recorded.push(payload);
+          if (payload) {
+            recorded.push(payload);
+          }
         }
       }
 
@@ -55,47 +68,83 @@ class RuntimeStorage {
     }
   };
 
-  newEvent = async (eventName: string, props?: Record<string, any>) => {
+  newEvent = async (
+    eventName: string,
+    props?: Record<string, any>
+  ): Promise<string> => {
     const memoryInfo = await getMemoryUsage();
 
     if (!memoryInfo?.unsupported && !isEmpty(memoryInfo)) {
       eventName = trim(eventName);
 
       const existingEventRecord = this.eventsRecord[eventName];
-
-      if (!isEmpty(existingEventRecord)) {
-        existingEventRecord.length = 0;
-      } else if (!isArray(this.eventsRecord[eventName])) {
-        this.eventsRecord[eventName] = [];
-      }
-
-      this.eventsRecord[eventName].push({
+      const id = createId();
+      const eventPayload = {
+        id,
         eventName,
         start: memoryInfo,
         startTimeIso: moment().toISOString(),
         ...props,
-      });
+      };
+
+      if (!isArray(existingEventRecord)) {
+        this.eventsRecord[eventName] = [];
+      }
+
+      if (!isEmpty(existingEventRecord) && this.eventsListCountLimit === 1) {
+        existingEventRecord.length = 0;
+      } else if (
+        this.eventsListCountLimit > 1 &&
+        size(this.eventsRecord[eventName]) === this.eventsListCountLimit
+      ) {
+        // remove first item
+        this.eventsRecord[eventName].shift();
+      }
+
+      this.eventsRecord[eventName].push(eventPayload);
+
+      return id;
     } else if (this.verbose) {
       console.log('Rewipejs: newEvent(): unsupported');
     }
+
+    return '';
   };
 
-  endEvent = async (eventName: string) => {
+  endEvent = async (id: string, eventName: string) => {
     const memoryInfo = await getMemoryUsage();
 
-    if (!memoryInfo?.unsupported && !isEmpty(memoryInfo)) {
+    if (!id) {
+      if (this.verbose) {
+        console.log(
+          `Rewipejs: endEvent(): eventName:${eventName} err: missing id`
+        );
+      }
+    } else if (!memoryInfo?.unsupported && !isEmpty(memoryInfo)) {
       eventName = trim(eventName);
 
-      const existingEventRecord = this.eventsRecord[eventName];
-      const existingPayload = existingEventRecord.pop();
-
-      if (!isEmpty(existingPayload)) {
+      if (this.eventsListCountLimit === 1) {
+        const eventPayload = head(
+          filter(this.eventsRecord[eventName], (e) => e?.id === id)
+        );
         this.eventsRecord[eventName].length = 0;
-        this.eventsRecord[eventName].push({
-          ...existingPayload,
-          end: memoryInfo,
-          endTimeIso: moment().toISOString(),
-        });
+
+        if (eventPayload?.id === id) {
+          this.eventsRecord[eventName].push({
+            ...eventPayload,
+            end: memoryInfo,
+            endTimeIso: moment().toISOString(),
+          });
+        }
+      } else {
+        for (let i = 0; i < size(this.eventsRecord[eventName]); i++) {
+          const eventPayload = this.eventsRecord[eventName][i];
+
+          if (eventPayload?.id === id) {
+            this.eventsRecord[eventName][i].end = memoryInfo;
+            this.eventsRecord[eventName][i].endTimeIso = moment().toISOString();
+          }
+        }
       }
     } else if (this.verbose) {
       console.log('Rewipejs: endEvent(): unsupported');
@@ -105,6 +154,23 @@ class RuntimeStorage {
 
 const storage: { instance?: RuntimeStorage | null } = { instance: undefined };
 
+/**
+ * Store initial memory so we can record and compare progress
+ */
+const storeInitialMemory = () => {
+  getMemoryUsage()
+    .then((memoryInfo) => {
+      if (storage.instance && !storage.instance?.startMemoryInfo) {
+        storage.instance.startMemoryInfo = memoryInfo;
+      }
+    })
+    .catch((err) => {
+      if (storage?.instance?.verbose) {
+        console.log('Rewipejs: storeInitialMemory(): err:', err?.message);
+      }
+    });
+};
+
 export const init = (params: RuntimeStorageParams) => {
   if (!storage.instance) {
     if (params?.verbose) {
@@ -112,6 +178,8 @@ export const init = (params: RuntimeStorageParams) => {
     }
 
     storage.instance = new RuntimeStorage(params);
+
+    storeInitialMemory();
   }
 };
 

@@ -18,6 +18,7 @@
   "author": "Robert Espina <robert.espina9627@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4"
   },

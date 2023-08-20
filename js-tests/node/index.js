@@ -5,7 +5,7 @@ const {
   getEvent,
   getEventMemoryInsights,
   RewipeStorage,
-} = require('rewipe-js');
+} = require('../../dist');
 const { timeout } = require('./utils');
 
 const start = async (iteration = 1) => {
@@ -14,7 +14,7 @@ const start = async (iteration = 1) => {
   const eventName = `StartTest${iteration}Event`;
 
   config({ environment: 'development', verbose: true });
-  await run({ eventName });
+  const id = await run({ eventName });
 
   obj1 = null;
   obj2 = null;
@@ -22,7 +22,7 @@ const start = async (iteration = 1) => {
   obj1 = { test: 1 };
   obj2 = { test: 1 };
 
-  await end({ eventName });
+  await end({ id, eventName });
 
   const memInfo = getEvent(eventName);
   console.log('memInfo', memInfo);
