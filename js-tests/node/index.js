@@ -5,6 +5,7 @@ const {
   getEvent,
   getEventMemoryInsights,
   RewipeStorage,
+  trackMemoryAndPromise,
 } = require('../../dist');
 const { timeout } = require('./utils');
 
@@ -36,6 +37,19 @@ const start = async (iteration = 1) => {
   console.log('\n\n');
 };
 
+const testTrackMemoryAndPromise = async () => {
+  const addNumberTracked = trackMemoryAndPromise(
+    'addNumber',
+    (x = 0, y = 0) => {
+      return x + y;
+    }
+  );
+
+  const sum = await addNumberTracked(2, 2);
+
+  console.log('addNumber', 'sum', sum, getEvent('addNumber'));
+};
+
 try {
   (async () => {
     await start(1);
@@ -43,6 +57,7 @@ try {
     await start(1);
     await timeout(500);
     await start(2);
+    await testTrackMemoryAndPromise();
 
     console.log(RewipeStorage());
   })();
