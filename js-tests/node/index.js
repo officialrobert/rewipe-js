@@ -4,6 +4,7 @@ const {
   end,
   getEvent,
   getEventMemoryInsights,
+  RewipeStorage,
 } = require('../../dist');
 const { timeout } = require('./utils');
 
@@ -32,11 +33,13 @@ const start = async (iteration = 1) => {
 
 try {
   (async () => {
-    start(1);
+    await start(1);
     await timeout(1_500);
-    start(1);
+    await start(1);
     await timeout(500);
-    start(2);
+    await start(2);
+
+    console.log(RewipeStorage());
   })();
 } catch (err) {
   console.log(err?.message);
