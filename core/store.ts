@@ -13,15 +13,21 @@ class RuntimeStorage {
   environment: IRewipeEnvironment | string;
   projectId: string;
   eventsRecord: Record<string, IRewipeEvent[]> = {};
+  verbose?: boolean | undefined;
 
-  constructor(params: IRewipeCoreConfig) {
+  constructor(params: IRewipeCoreConfig & { verbose?: boolean }) {
     this.apiKey = params?.apiKey || '';
     this.environment = params?.environment || 'development';
     this.projectId = params?.projectId || '';
     this.eventsRecord = { ...this.eventsRecord };
+    this.verbose = params?.verbose;
   }
 
-  exportEventRecords(format: 'json' | 'array' = 'json') {
+  exportEventRecords(format = 'json') {
+    if (this.verbose) {
+      console.log(`Rewipejs: exportEventRecords(${format})`);
+    }
+
     if (format === 'json') {
       return this.eventsRecord;
     } else if (format === 'array') {
@@ -97,6 +103,10 @@ const storage: { instance?: RuntimeStorage | null } = { instance: undefined };
 
 export const init = (params: RuntimeStorageParams) => {
   if (!storage.instance) {
+    if (params?.verbose) {
+      console.log('Rewipejs: init()');
+    }
+
     storage.instance = new RuntimeStorage(params);
   }
 };

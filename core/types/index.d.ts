@@ -4,6 +4,11 @@ export enum IRewipeEnvironment {
   stage = 'stage',
 }
 
+export enum RewipeEventRecordsFormat {
+  json = 'json',
+  array = 'array',
+}
+
 interface IRewipeMemoryInfo {
   unsupported: boolean;
   rss?: number;
@@ -31,7 +36,9 @@ interface IRewipeCoreConfig {
   projectId?: string;
 }
 
-interface RuntimeStorageParams extends IRewipeCoreConfig {}
+interface RuntimeStorageParams extends IRewipeCoreConfig {
+  verbose?: boolean;
+}
 
 interface IRewipeRunParams {
   eventName: string;

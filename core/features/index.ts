@@ -5,6 +5,7 @@ import {
   IRewipeEndParams,
   IRewipeEvent,
   IRewipeRunParams,
+  RewipeEventRecordsFormat,
 } from '../types';
 import { InitConfigError } from '../errors';
 import { computePercentDifferenceAndType } from './utils';
@@ -12,6 +13,24 @@ import { computePercentDifferenceAndType } from './utils';
 export const config = (params: IRewipeCoreConfig) => {
   init(params);
 };
+
+export const exportEventRecords = (
+  format: RewipeEventRecordsFormat
+): IRewipeEvent[] | Record<string, IRewipeEvent[]> | null | undefined => {
+  try {
+    const rewipeStorage = getRewipeStorage();
+
+    if (rewipeStorage) {
+      return rewipeStorage.exportEventRecords(format);
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+};
+
+export const RewipeStorage = () => getRewipeStorage();
 
 export const run = async (params: IRewipeRunParams): Promise<void> => {
   const { eventName, props } = params;

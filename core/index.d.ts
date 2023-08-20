@@ -10,4 +10,10 @@ declare module 'rewipe-js' {
   export function clearEvent(eventName: string): void;
 
   export function getEventMemoryInsights(eventPayload: IRewipeEvent): string;
+
+  export function exportEventRecords(
+    format: RewipeEventRecordsFormat
+  ): IRewipeEvent[] | Record<string, IRewipeEvent[]> | null | undefined;
+
+  export function RewipeStorage(): RuntimeStorage;
 }
