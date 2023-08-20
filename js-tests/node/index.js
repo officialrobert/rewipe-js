@@ -13,7 +13,12 @@ const start = async (iteration = 1) => {
   let obj2 = {};
   const eventName = `StartTest${iteration}Event`;
 
-  config({ environment: 'development', verbose: true });
+  config({
+    environment: 'development',
+    eventsListCountLimit: 3,
+    verbose: true,
+  });
+
   const id = await run({ eventName });
 
   obj1 = null;
