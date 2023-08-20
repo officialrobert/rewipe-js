@@ -28,7 +28,7 @@ rewipe.config({
 ```js
 // Example case
 const onSubmitCheckout = async (e) => {
-  await rewipe.run({
+  const id = await rewipe.run({
     eventName: 'SubmitCheckout',
   });
 
@@ -36,6 +36,7 @@ const onSubmitCheckout = async (e) => {
   // ...
 
   rewipe.end({
+    id,
     eventName: 'SubmitCheckout',
   });
 };
@@ -49,6 +50,7 @@ const info = rewipe.getEvent('SubmitCheckout');
 
 // sample log data
 const sampleInfoPayload = {
+  id: 'xx-xx-unique-id',
   eventName: 'SubmitCheckout',
 
   // This means, it took 10 MB-
@@ -77,13 +79,15 @@ const app = express();
 
 app.post('/test-endpoint', async (req, res, next) => {
   try {
-    await rewipe.run({
+    const id = await rewipe.run({
       eventName: 'FileUpload',
     });
 
     // file handling ...
 
-    rewipe.end({
+    await rewipe.end({
+      // id is required
+      id,
       eventName: 'FileUpload',
     });
 
@@ -96,6 +100,18 @@ app.post('/test-endpoint', async (req, res, next) => {
     next(err);
   }
 });
+```
+
+# Alternatively, use 'trackMemoryAndPromise' API
+
+```js
+const addNumberTracked = trackMemoryAndPromise('addNumber', (x = 0, y = 0) => {
+  return x + y;
+});
+const sum = await addNumberTracked(2, 2);
+
+console.log('event addNumber', 'sum', sum, getEvent('addNumber'));
+// log: 'event addNumber sum 4 { id: 'xx-id', eventName: 'addNumber', ... }
 ```
 
 # Identify which user experienced the app crash
