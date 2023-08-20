@@ -5,5 +5,7 @@ export {
   getEvent,
   getEventMemoryInsights,
   clearEvent,
+  exportEventRecords,
+  RewipeStorage,
 } from './features';
 export { rewipeEnv } from './constants';
