@@ -5,8 +5,9 @@
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./core",
+    "baseUrl": "./core",
     "strict": true
   },
   "include": ["core/**/*.ts"],
-  "exclude": ["node_modules", "dist", "js-tests", "tests"]
+  "exclude": ["node_modules", "dist", "js-tests", "docs", "tests"]
 }

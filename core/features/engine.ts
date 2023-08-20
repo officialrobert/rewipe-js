@@ -1,4 +1,4 @@
-import { isUndefined } from 'lodash';
+import { isNil, isUndefined } from 'lodash';
 
 /**
  * Check code if running from nodejs
@@ -6,9 +6,17 @@ import { isUndefined } from 'lodash';
  */
 export const isNodeJsEnvironment = async (): Promise<boolean> => {
   try {
-    const process = await import('process');
+    let nodeProcess: typeof process | undefined;
 
-    return !isUndefined(process);
+    try {
+      if (window && !isUndefined(window)) {
+        return false;
+      }
+    } catch {
+      nodeProcess = require('process');
+    }
+
+    return !isUndefined(nodeProcess) && !isNil(nodeProcess);
   } catch (err: any) {
     return false;
   }
