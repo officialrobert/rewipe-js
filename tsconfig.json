@@ -1,13 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "es2019",
     "module": "CommonJS",
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./core",
     "baseUrl": "./core",
-    "strict": true
+    "strict": true,
+    "lib": ["esnext", "ES2017", "dom", "dom.iterable", "scripthost"]
   },
   "include": ["core/**/*.ts"],
-  "exclude": ["node_modules", "dist", "js-tests", "docs", "tests"]
+  "exclude": [
+    "**/node_modules",
+    "**/dist",
+    "node_modules",
+    "dist",
+    "js-tests",
+    "docs",
+    "tests"
+  ]
 }
