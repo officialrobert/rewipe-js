@@ -85,18 +85,23 @@ export const clearEvent = (eventName: string) => {
 export const getEventMemoryInsights = (eventPayload: IRewipeEvent): string => {
   try {
     const { start, end, eventName } = eventPayload;
-    const { usedHeap: startUsedHeap } = start;
-    const { usedHeap: endUsedHeap } = end || {};
+    const { usedHeap: startUsedHeap = 0 } = start;
+    const { usedHeap: endUsedHeap = 0 } = end || {};
 
     const diffMeta = computePercentDifferenceAndType(
       startUsedHeap as number,
       endUsedHeap as number
     );
+    const totalBytesDifference = endUsedHeap - startUsedHeap;
 
     if (diffMeta?.type === 'increase') {
-      return `${eventName}: ${diffMeta?.percent?.toFixed(2)}% increase`;
+      return `${eventName}: ${diffMeta?.percent?.toFixed(
+        2
+      )}% increase. Total bytes - ${totalBytesDifference}`;
     } else if (diffMeta?.type === 'decrease') {
-      return `${eventName}: ${diffMeta?.percent?.toFixed(2)}% decrease`;
+      return `${eventName}: ${diffMeta?.percent?.toFixed(
+        2
+      )}% decrease. Total bytes - ${totalBytesDifference}`;
     } else {
       return `${eventName}: No change`;
     }

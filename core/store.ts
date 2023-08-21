@@ -97,8 +97,8 @@ class RuntimeStorage {
         this.eventsListCountLimit > 1 &&
         size(this.eventsRecord[eventName]) === this.eventsListCountLimit
       ) {
-        // remove first item
-        this.eventsRecord[eventName].shift();
+        // remove most recent item
+        this.eventsRecord[eventName].pop();
       }
 
       this.eventsRecord[eventName].push(eventPayload);
