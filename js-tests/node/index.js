@@ -6,7 +6,7 @@ const {
   getEventMemoryInsights,
   RewipeStorage,
   trackMemoryAndPromise,
-} = require('../../dist');
+} = require('rewipe-js');
 const { timeout } = require('./utils');
 
 const start = async (iteration = 1) => {
@@ -31,7 +31,8 @@ const start = async (iteration = 1) => {
   await end({ id, eventName });
 
   const memInfo = getEvent(eventName);
-  console.log('memInfo', memInfo);
+
+  console.log('evt id', id, 'memInfo', memInfo);
   console.log('\n\n');
   console.log(getEventMemoryInsights(memInfo[0]));
   console.log('\n\n');
