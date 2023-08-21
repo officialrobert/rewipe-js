@@ -13,8 +13,7 @@ export const isNodeJsEnvironment = async (): Promise<boolean> => {
         throw new Error('is node');
       }
     } catch {
-      const nodeProcess = require('process');
-      return !isUndefined(nodeProcess) && !isNil(nodeProcess);
+      return !isUndefined(process) && !isNil(process);
     }
   } catch (err: any) {
     return false;

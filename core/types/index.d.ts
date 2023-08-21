@@ -31,12 +31,18 @@ interface IRewipeEvent {
   };
 }
 
+interface IRewipeConfigNode {
+  enableIntervalCheck?: boolean; // run background function to ping memory every second
+  intervalCheckDelayInMs?: number; // 1_000 === 1 sec
+}
+
 interface IRewipeCoreConfig {
   eventsListCountLimit?: number;
   apiKey?: string;
   environment?: IRewipeEnvironment | string;
   projectId?: string;
   verbose?: boolean | undefined;
+  node?: IRewipeConfigNode | undefined;
 }
 
 interface RuntimeStorageParams extends IRewipeCoreConfig {}

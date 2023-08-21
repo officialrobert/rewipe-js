@@ -84,7 +84,7 @@ export const clearEvent = (eventName: string) => {
 
 export const getEventMemoryInsights = (eventPayload: IRewipeEvent): string => {
   try {
-    const { start, end } = eventPayload;
+    const { start, end, eventName } = eventPayload;
     const { usedHeap: startUsedHeap } = start;
     const { usedHeap: endUsedHeap } = end || {};
 
@@ -94,11 +94,11 @@ export const getEventMemoryInsights = (eventPayload: IRewipeEvent): string => {
     );
 
     if (diffMeta?.type === 'increase') {
-      return `${diffMeta?.percent?.toFixed(2)}% increase`;
+      return `${eventName}: ${diffMeta?.percent?.toFixed(2)}% increase`;
     } else if (diffMeta?.type === 'decrease') {
-      return `${diffMeta?.percent?.toFixed(2)}% decrease`;
+      return `${eventName}: ${diffMeta?.percent?.toFixed(2)}% decrease`;
     } else {
-      return 'No change';
+      return `${eventName}: No change`;
     }
   } catch (err: any) {
     return `Failed getEventMemoryInsights() err: ${err?.message}`;

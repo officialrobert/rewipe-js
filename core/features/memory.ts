@@ -59,7 +59,13 @@ export const getMemoryUsage = async (): Promise<IRewipeMemoryInfo> => {
     const isNodeJs = await isNodeJsEnvironment();
 
     if (isNodeJs) {
-      const processModule = require('process');
+      let processModule = process;
+
+      if (!processModule) {
+        const nodeProcessName = 'process';
+        processModule = await import(nodeProcessName);
+      }
+
       const memoryInfo = processModule.memoryUsage();
 
       if (!memoryInfo) {
