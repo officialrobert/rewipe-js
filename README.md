@@ -7,7 +7,7 @@ Rewipe JS SDK - Easily track and kill memory leak
 > - Enable developers to track memory usage from JavaScript runtime (backend or frontend)
 > - Github Action integration so developers can test increase/decrease in memory usage for each PR that gets merged
 
-# Install
+## Install
 
 ```js
 npm i rewipe-js
@@ -72,7 +72,7 @@ const sampleInfoPayload = {
 };
 ```
 
-# ExpressJS server
+## ExpressJS server
 
 ```js
 const app = express();
@@ -102,7 +102,7 @@ app.post('/test-endpoint', async (req, res, next) => {
 });
 ```
 
-# Alternatively, use 'trackMemoryAndPromise' API
+## Alternatively, use 'trackMemoryAndPromise' API
 
 ```js
 const addNumberTracked = trackMemoryAndPromise('addNumber', (x = 0, y = 0) => {
@@ -114,7 +114,7 @@ console.log('event addNumber', 'sum', sum, getEvent('addNumber'));
 // log: 'event addNumber sum 4 { id: 'xx-id', eventName: 'addNumber', ... }
 ```
 
-# Identify which user experienced the app crash
+## Identify which user experienced the app crash
 
 You can store either the user `id` or `email` so you can easily search from the dashboard which user experienced the crash.
 
@@ -124,3 +124,11 @@ rewipe.run({
   props: { email: 'user@mail.com', id: 'xxxx-user-id' },
 });
 ```
+
+## Documentation
+
+Access the <a href="./docs/README.md"><code><b> full docs.</b></code></a>
+
+## License
+
+Licensed under [MIT](./LICENSE).
