@@ -8,7 +8,7 @@ import { isBrowserEnvironment, isNodeJsEnvironment } from './engine';
  */
 export const getMemoryUsage = async (): Promise<IRewipeMemoryInfo> => {
   try {
-    const isBrowser = await isBrowserEnvironment();
+    const isBrowser = isBrowserEnvironment();
 
     if (isBrowser) {
       // eslint-disable-next-line

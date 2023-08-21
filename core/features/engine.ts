@@ -24,9 +24,9 @@ export const isNodeJsEnvironment = async (): Promise<boolean> => {
  * Check code if running from browser
  * @returns
  */
-export const isBrowserEnvironment = async (): Promise<boolean> => {
+export const isBrowserEnvironment = (): boolean => {
   try {
-    return !isUndefined(window) && !window.document;
+    return !isUndefined(window) && Boolean(window.document);
   } catch (err: any) {
     return false;
   }
