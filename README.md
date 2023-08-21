@@ -127,7 +127,7 @@ rewipe.run({
 
 ## Documentation
 
-Access the <a href="./docs/README.md"><code><b> full docs.</b></code></a>
+Access the <a href="./docs/README.md"><b> full API docs.</b></a>
 
 ## License
 
