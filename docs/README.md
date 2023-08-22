@@ -4,7 +4,7 @@
 
 This function will repeatedly call the callback function, record heap usage, and provide insights.
 
-```js
+```ts
  testMemoryLeak (
     callback: CB,
     iteration: number // default iteration upto 4

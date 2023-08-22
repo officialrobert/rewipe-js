@@ -13,9 +13,9 @@ RewipeJS - Easily track and kill memory leak
 npm i rewipe-js
 ```
 
-## Testing
+## For testing
 
-The `testMemoryLeak` function repeatedly calls the provided function to record heap usage.
+The `testMemoryLeak` function repeatedly calls the provided function to record heap usage. Works on nodejs and browsers.
 
 ```js
 import { testMemoryLeak } from 'rewipe-js';
@@ -39,6 +39,8 @@ test('Should not consume more than 1MB', async () => {
   expect(memoryConsumed).toBeLessThan(1_000_000);
 });
 ```
+
+**Note:** Some browsers might not support the `window.performance.memory` API. To begin testing from a Chromium-based browser, run the app with the `--enable-precise-memory-info` flag.
 
 ## How it works (advanced)
 
