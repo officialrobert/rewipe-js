@@ -1,6 +1,6 @@
 # rewipe-js
 
-Rewipe JS SDK - Easily track and kill memory leak
+RewipeJS - Easily track and kill memory leak
 
 > Roadmap:
 >
