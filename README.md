@@ -122,7 +122,7 @@ app.post('/test-endpoint', async (req, res, next) => {
     });
 
     const memoryEventPayload = rewipe.getEvent(eventName)[0];
-    const consumed = getConsumedMemory(memoryEventPayload);
+    const consumed = rewipe.getConsumedMemory(memoryEventPayload);
 
     console.log(consumed);
     // in bytes

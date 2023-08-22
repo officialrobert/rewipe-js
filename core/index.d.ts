@@ -25,6 +25,8 @@ declare module 'rewipe-js' {
     callback: CB
   ): (...args: Parameters<CB>) => Promise<ReturnType<CB>>;
 
+  export function getConsumedMemory(eventPayload: IRewipeEvent): number;
+
   export function readableMemory(memoryInBytes: number): string;
 
   export function testMemoryLeak<CB extends (...args: any[]) => any>(
