@@ -1,5 +1,5 @@
 import { getRewipeStorage, init } from '../store';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNumber, size } from 'lodash';
 import {
   IRewipeCoreConfig,
   IRewipeEndParams,
@@ -7,8 +7,13 @@ import {
   IRewipeRunParams,
   RewipeEventRecordsFormat,
 } from '../types';
-import { InitConfigError } from '../errors';
-import { computePercentDifferenceAndType } from './utils';
+import {
+  InitConfigError,
+  RewipeUnsupportedError,
+  TestIterationError,
+} from '../errors';
+import { computePercentDifferenceAndType, readableMemory } from './utils';
+import { getMemoryUsage } from './memory';
 
 export const config = (params: IRewipeCoreConfig) => {
   init(params);
@@ -131,4 +136,103 @@ export const trackMemoryAndPromise = function <
       return result;
     }
   };
+};
+
+export const getConsumedMemory = (eventPayload: IRewipeEvent): number => {
+  const { start, end } = eventPayload;
+  const { usedHeap: startUsedHeap = 0 } = start;
+  const { usedHeap: endUsedHeap = 0 } = end || {};
+
+  return endUsedHeap - startUsedHeap;
+};
+
+export const testMemoryLeak = async function <
+  CB extends (...args: any[]) => any
+>(
+  callback: CB,
+  iteration = 4
+): Promise<{ memoryConsumed: number; memoryInsights: string }> {
+  const memos = [];
+
+  if (iteration < 4) {
+    throw new TestIterationError(
+      "testMemoryLeak(): 'iteration' should be >= 4"
+    );
+  }
+
+  for (let i = 0; i < iteration; i++) {
+    const memoryInfoStart = await getMemoryUsage();
+    const result = callback();
+
+    if (result instanceof Promise) {
+      await result;
+    }
+
+    if (memoryInfoStart?.unsupported) {
+      throw new RewipeUnsupportedError('Rewipejs engine not supported');
+    }
+
+    const memoryInfoEnd = await getMemoryUsage();
+
+    memos.push({
+      start: memoryInfoStart,
+      end: memoryInfoEnd,
+    });
+  }
+
+  let memoryInsights = '';
+  let memoryConsumed = 0; // we return the highest memory bytes consumed from all iterations
+
+  for (let i = 0; i < size(memos); i++) {
+    const currentMemo = memos[i];
+    const prevMemo = memos[i - 1];
+
+    if (
+      isNumber(currentMemo?.end?.usedHeap) &&
+      isNumber(currentMemo?.start?.usedHeap)
+    ) {
+      const totalConsumed =
+        currentMemo.end?.usedHeap - currentMemo.start?.usedHeap;
+
+      if (!memoryConsumed || totalConsumed > memoryConsumed) {
+        memoryConsumed = totalConsumed;
+      }
+
+      if (
+        isNumber(prevMemo?.end?.usedHeap) &&
+        isNumber(prevMemo?.start?.usedHeap)
+      ) {
+        const prevTotalConsumed =
+          prevMemo?.end?.usedHeap - prevMemo?.start?.usedHeap;
+
+        if (!isEmpty(memoryInsights)) {
+          memoryInsights += '\n';
+        }
+
+        const diffMeta = computePercentDifferenceAndType(
+          prevTotalConsumed,
+          totalConsumed
+        );
+
+        memoryInsights += `Iteration #${i} — ${readableMemory(
+          totalConsumed
+        )} consumed. ${diffMeta?.percent}${
+          isNumber(diffMeta?.percent) ? '%' : ''
+        } ${diffMeta?.type}`;
+      }
+    }
+  }
+
+  const totalMemoryInsight = `Total memory consumed — ${readableMemory(
+    memoryConsumed
+  )}`;
+
+  if (memoryInsights) {
+    memoryInsights += '\n';
+    memoryInsights += totalMemoryInsight;
+  } else {
+    memoryInsights = totalMemoryInsight;
+  }
+
+  return { memoryInsights, memoryConsumed };
 };

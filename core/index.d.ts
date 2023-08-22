@@ -24,4 +24,11 @@ declare module 'rewipe-js' {
     eventName: E,
     callback: CB
   ): (...args: Parameters<CB>) => Promise<ReturnType<CB>>;
+
+  export function readableMemory(memoryInBytes: number): string;
+
+  export function testMemoryLeak<CB extends (...args: any[]) => any>(
+    callback: CB,
+    iteration: number
+  ): Promise<{ memoryConsumed: number; memoryInsights: string }>;
 }

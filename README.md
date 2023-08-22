@@ -13,7 +13,36 @@ Rewipe JS SDK - Easily track and kill memory leak
 npm i rewipe-js
 ```
 
-## How it works
+## Testing
+
+The `testMemoryLeak` function repeatedly calls the provided function to record heap usage.
+
+```js
+import { testMemoryLeak } from 'rewipe-js';
+import Store from 'lib/store';
+
+test('Should not consume more than 1MB', async () => {
+  const { memoryInsights, memoryConsumed } = await testMemoryLeak(
+    // you can pass in async/non-async function
+    () => {
+      Store.save('foo', { foo: 'bar' });
+    }
+  );
+
+  // memoryConsumed in bytes
+  console.log(`${memoryConsumed} bytes`);
+  // log: 15000 bytes
+
+  cosole.log(memoryInsights);
+  // log: Total memory consumed — 1 Mb
+
+  expect(memoryConsumed).toBeLessThan(1_000_000);
+});
+```
+
+## How it works (advanced)
+
+You can also use this library for record-keeping.
 
 ```js
 import * rewipe from 'rewipe-js';
@@ -35,7 +64,7 @@ const onSubmitCheckout = async (e) => {
   // your computation code here
   // ...
 
-  rewipe.end({
+  await rewipe.end({
     id,
     eventName: 'SubmitCheckout',
   });
@@ -75,27 +104,39 @@ const sampleInfoPayload = {
 ## ExpressJS server
 
 ```js
+import * as rewipe from 'rewipe-js';
+
 const app = express();
 
 app.post('/test-endpoint', async (req, res, next) => {
   try {
-    const id = await rewipe.run({
-      eventName: 'FileUpload',
-    });
+    const eventName = 'FileUpload';
+    const id = await rewipe.run({ eventName });
 
     // file handling ...
 
     await rewipe.end({
       // id is required
       id,
-      eventName: 'FileUpload',
+      eventName,
     });
 
-    console.log(
-      rewipe.getEventMemoryInsights(rewipe.getEvent('FileUpload')[0])
-    );
+    const memoryEventPayload = rewipe.getEvent(eventName)[0];
+    const consumed = getConsumedMemory(memoryEventPayload);
 
-    // 15% heap memory increase
+    console.log(consumed);
+    // in bytes
+    // log: 15000
+
+    // or
+
+    // log({
+    //   ...
+    //   message: `File upload took ${rewipe.readableMemory(consumed)}`,
+    // });
+
+    console.log(rewipe.getEventMemoryInsights(memoryEventPayload));
+    // log: 15% heap memory increase
   } catch (err) {
     next(err);
   }

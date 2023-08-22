@@ -8,5 +8,7 @@ export {
   exportEventRecords,
   RewipeStorage,
   trackMemoryAndPromise,
+  testMemoryLeak,
 } from './features';
+export { readableMemory } from './features/utils';
 export { rewipeEnv } from './constants';

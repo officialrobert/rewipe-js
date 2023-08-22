@@ -16,3 +16,17 @@ export class FeatureError extends BaseError {
     this.name = 'FeatureError';
   }
 }
+
+export class TestIterationError extends BaseError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'TestIterationError';
+  }
+}
+
+export class RewipeUnsupportedError extends BaseError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'RewipeUnsupportedError';
+  }
+}
