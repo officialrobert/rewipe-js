@@ -1,5 +1,39 @@
 # API
 
+## testMemoryLeak(): Promise<{ memoryConsumed: number; memoryInsights: string }>
+
+This function will repeatedly call the callback function, record heap usage, and provide insights.
+
+```js
+ testMemoryLeak (
+    callback: CB,
+    iteration: number // default iteration upto 4
+  )
+```
+
+```js
+import { testMemoryLeak } from 'rewipe-js';
+import Store from 'lib/store';
+
+test('Should not consume more than 1MB', async () => {
+  const { memoryInsights, memoryConsumed } = await testMemoryLeak(
+    // you can pass in async/non-async function
+    () => {
+      Store.save('foo', { foo: 'bar' });
+    }
+  );
+
+  // memoryConsumed in bytes
+  console.log(`${memoryConsumed} bytes`);
+  // log: 15000 bytes
+
+  cosole.log(memoryInsights);
+  // log: Total memory consumed — 1 Mb
+
+  expect(memoryConsumed).toBeLessThan(1_000_000);
+});
+```
+
 ## config()
 
 ```js
