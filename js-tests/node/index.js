@@ -5,7 +5,6 @@ const {
   getEvent,
   trackMemoryAndPromise,
   testMemoryLeak,
-  RewipeStorage,
 } = require('../../dist');
 const { timeout } = require('./utils');
 
