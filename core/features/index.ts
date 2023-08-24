@@ -154,6 +154,7 @@ export const testMemoryLeak = async function <
   iteration = testMemoryLeakMinIteration
 ): Promise<{ memoryConsumed: number; memoryInsights: string }> {
   const memos = [];
+  const rewipeStorage = getRewipeStorage();
 
   if (iteration < testMemoryLeakMinIteration) {
     throw new TestIterationError(
@@ -206,7 +207,7 @@ export const testMemoryLeak = async function <
         const prevTotalConsumed =
           prevMemo?.end?.usedHeap - prevMemo?.start?.usedHeap;
 
-        if (!isEmpty(memoryInsights)) {
+        if (!isEmpty(memoryInsights) && rewipeStorage?.verbose) {
           memoryInsights += '\n';
         }
 
@@ -215,11 +216,13 @@ export const testMemoryLeak = async function <
           totalConsumed
         );
 
-        memoryInsights += `Iteration #${i} — ${readableMemory(
-          totalConsumed
-        )} consumed. ${diffMeta?.percent}${
-          isNumber(diffMeta?.percent) ? '%' : ''
-        } ${diffMeta?.type}`;
+        if (rewipeStorage?.verbose) {
+          memoryInsights += `Iteration #${i} — ${readableMemory(
+            totalConsumed
+          )} consumed. ${diffMeta?.percent}${
+            isNumber(diffMeta?.percent) ? '%' : ''
+          } ${diffMeta?.type}`;
+        }
       }
     }
   }
@@ -258,7 +261,10 @@ export const testMemoryLeak = async function <
       );
 
       if (diffMeta?.percent > 5 && diffMeta?.type === 'increase') {
-        memoryInsights += '\n';
+        if (memoryInsights) {
+          memoryInsights += '\n';
+        }
+
         memoryInsights += `${diffMeta.percent}% memory increase. Possible memory leak.`;
       }
     }

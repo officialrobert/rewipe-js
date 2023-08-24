@@ -5,6 +5,7 @@ const {
   getEvent,
   trackMemoryAndPromise,
   testMemoryLeak,
+  RewipeStorage,
 } = require('../../dist');
 const { timeout } = require('./utils');
 
@@ -12,12 +13,6 @@ const start = async (iteration = 1) => {
   let obj1 = {};
   let obj2 = {};
   const eventName = `StartTest${iteration}Event`;
-
-  config({
-    environment: 'development',
-    eventsListCountLimit: 3,
-    verbose: true,
-  });
 
   const id = await run({ eventName });
 
@@ -51,6 +46,12 @@ const testTrackMemoryAndPromise = async () => {
 
 try {
   (async () => {
+    config({
+      environment: 'development',
+      eventsListCountLimit: 3,
+      verbose: true,
+    });
+
     await start(1);
     await timeout(1_500);
     await start(1);
