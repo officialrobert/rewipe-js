@@ -1,5 +1,5 @@
 import { getRewipeStorage, init } from '../store';
-import { isEmpty, isNumber, size } from 'lodash';
+import { head, isEmpty, isNumber, last, size } from 'lodash';
 import {
   IRewipeCoreConfig,
   IRewipeEndParams,
@@ -14,6 +14,7 @@ import {
 } from '../errors';
 import { computePercentDifferenceAndType, readableMemory } from './utils';
 import { getMemoryUsage } from './memory';
+import { testMemoryLeakMinIteration } from '../constants';
 
 export const config = (params: IRewipeCoreConfig) => {
   init(params);
@@ -150,13 +151,13 @@ export const testMemoryLeak = async function <
   CB extends (...args: any[]) => any
 >(
   callback: CB,
-  iteration = 4
+  iteration = testMemoryLeakMinIteration
 ): Promise<{ memoryConsumed: number; memoryInsights: string }> {
   const memos = [];
 
-  if (iteration < 4) {
+  if (iteration < testMemoryLeakMinIteration) {
     throw new TestIterationError(
-      "testMemoryLeak(): 'iteration' should be >= 4"
+      `testMemoryLeak(): 'iteration' should be >=${testMemoryLeakMinIteration}`
     );
   }
 
@@ -226,12 +227,41 @@ export const testMemoryLeak = async function <
   const totalMemoryInsight = `Total memory consumed — ${readableMemory(
     memoryConsumed
   )}`;
+  const firstMemo = head(memos);
+  const lastMemo = last(memos);
 
   if (memoryInsights) {
     memoryInsights += '\n';
     memoryInsights += totalMemoryInsight;
   } else {
     memoryInsights = totalMemoryInsight;
+  }
+
+  if (
+    firstMemo &&
+    lastMemo &&
+    isNumber(firstMemo?.start?.usedHeap) &&
+    isNumber(firstMemo?.end?.usedHeap) &&
+    isNumber(lastMemo?.start?.usedHeap) &&
+    isNumber(lastMemo?.end?.usedHeap)
+  ) {
+    const firstIterationMemoryConsumed =
+      firstMemo?.end.usedHeap - firstMemo?.start?.usedHeap;
+    const lastIterationMemoryConsumed =
+      lastMemo?.end.usedHeap - lastMemo?.start?.usedHeap;
+
+    if (lastIterationMemoryConsumed > firstIterationMemoryConsumed) {
+      // check
+      const diffMeta = computePercentDifferenceAndType(
+        firstIterationMemoryConsumed,
+        lastIterationMemoryConsumed
+      );
+
+      if (diffMeta?.percent > 5 && diffMeta?.type === 'increase') {
+        memoryInsights += '\n';
+        memoryInsights += `${diffMeta.percent}% memory increase. Possible memory leak.`;
+      }
+    }
   }
 
   return { memoryInsights, memoryConsumed };

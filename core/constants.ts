@@ -3,3 +3,5 @@ export const rewipeEnv = {
   production: 'production',
   stage: 'stage',
 };
+
+export const testMemoryLeakMinIteration = 20;

@@ -7,7 +7,7 @@ This function will repeatedly call the callback function, record heap usage, and
 ```ts
  testMemoryLeak (
     callback: CB,
-    iteration: number // default iteration upto 4
+    iteration: number // default iteration is 20
   )
 ```
 
@@ -37,11 +37,11 @@ test('Should not consume more than 1MB', async () => {
 ## config()
 
 ```js
-{
+config({
   environment: 'development', // 'development' | 'production' | 'stage'
   eventsListCountLimit: 3, // max items to record per event
-  verbose: true  // true | false allow logs
-}
+  verbose: true, // true | false allow logs
+});
 ```
 
 ## run(): Promise<string>
