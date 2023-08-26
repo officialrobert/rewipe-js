@@ -43,6 +43,7 @@ interface IRewipeCoreConfig {
   projectId?: string;
   verbose?: boolean | undefined;
   node?: IRewipeConfigNode | undefined;
+  metadata?: Record<string, any>;
 }
 
 interface RuntimeStorageParams extends IRewipeCoreConfig {}

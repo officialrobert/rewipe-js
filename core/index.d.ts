@@ -33,4 +33,6 @@ declare module 'rewipe-js' {
     callback: CB,
     iteration: number
   ): Promise<{ memoryConsumed: number; memoryInsights: string }>;
+
+  export function getMetadata(property: string): any;
 }

@@ -20,6 +20,14 @@ export const config = (params: IRewipeCoreConfig) => {
   init(params);
 };
 
+export const getMetadata = (property: string) => {
+  try {
+    return getRewipeStorage()?.getMetadata(property);
+  } catch {
+    return undefined;
+  }
+};
+
 export const exportEventRecords = (
   format: RewipeEventRecordsFormat
 ): IRewipeEvent[] | Record<string, IRewipeEvent[]> | null | undefined => {

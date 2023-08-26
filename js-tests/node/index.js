@@ -5,6 +5,7 @@ const {
   getEvent,
   trackMemoryAndPromise,
   testMemoryLeak,
+  getMetadata,
 } = require('../../dist');
 const { timeout } = require('./utils');
 
@@ -49,6 +50,9 @@ try {
       environment: 'development',
       eventsListCountLimit: 3,
       verbose: true,
+      metadata: {
+        instance: 'instance0001',
+      },
     });
 
     await start(1);
@@ -69,6 +73,8 @@ try {
       }
     );
 
+    console.log(`getMetadata('instance')`, getMetadata('instance'));
+    console.log(`getMetadata('none')`, getMetadata('none'));
     console.log('memoryConsumed:', memoryConsumed);
     console.log('\n');
     console.log('memoryInsights:\n');

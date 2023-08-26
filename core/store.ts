@@ -1,4 +1,14 @@
-import { filter, head, isArray, isEmpty, isNumber, size, trim } from 'lodash';
+import {
+  filter,
+  head,
+  isArray,
+  isEmpty,
+  isNumber,
+  isObject,
+  isString,
+  size,
+  trim,
+} from 'lodash';
 import { getMemoryUsage } from './features/memory';
 import {
   IRewipeCoreConfig,
@@ -18,6 +28,7 @@ class RuntimeStorage {
   eventsRecord: Record<string, IRewipeEvent[]> = {};
   verbose?: boolean | undefined;
   startMemoryInfo?: IRewipeMemoryInfo | null | undefined;
+  metadata?: Record<string, any>;
 
   constructor(params: IRewipeCoreConfig) {
     this.apiKey = params?.apiKey || '';
@@ -26,12 +37,24 @@ class RuntimeStorage {
     this.eventsRecord = { ...this.eventsRecord };
     this.verbose = params?.verbose;
 
+    if (isObject(params?.metadata) && !isEmpty(params?.metadata)) {
+      this.metadata = { ...params.metadata };
+    }
+
     if (
       isNumber(params?.eventsListCountLimit) &&
       params?.eventsListCountLimit > 0
     ) {
       this.eventsListCountLimit = params.eventsListCountLimit;
     }
+  }
+
+  getMetadata(property: string) {
+    if (!isEmpty(property) && isString(property) && !isEmpty(this.metadata)) {
+      return this.metadata[property];
+    }
+
+    return undefined;
   }
 
   exportEventRecords(format = 'json') {
