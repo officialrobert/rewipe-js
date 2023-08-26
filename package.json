@@ -1,7 +1,7 @@
 {
   "name": "rewipe-js",
-  "version": "1.0.2308241",
-  "description": "Rewipe JS - Easily track and kill memory leak.",
+  "version": "1.0.2308261",
+  "description": "RewipeJS - Easily track and kill memory leak.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
