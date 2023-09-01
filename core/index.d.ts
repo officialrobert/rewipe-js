@@ -5,6 +5,7 @@ import {
   IRewipeEvent,
   RewipeEventRecordsFormat,
 } from './types/index';
+import { RewipeSupportedEngine } from './types/engine';
 import { RuntimeStorage } from './store';
 
 declare module 'rewipe-js' {
@@ -42,7 +43,8 @@ declare module 'rewipe-js' {
 
   export function testMemoryLeak<CB extends (...args: any[]) => any>(
     callback: CB,
-    iteration: number
+    iteration?: number,
+    engine?: RewipeSupportedEngine
   ): Promise<{ memoryConsumed: number; memoryInsights: string }>;
 
   export function getMetadata(property: string): any;

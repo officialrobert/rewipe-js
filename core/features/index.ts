@@ -6,8 +6,8 @@ import {
   IRewipeEvent,
   IRewipeRunParams,
   RewipeEventRecordsFormat,
-  RewipeSupportedEngine,
 } from '../types';
+import { RewipeSupportedEngine } from '../types/engine';
 import {
   InitConfigError,
   RewipeUnsupportedError,

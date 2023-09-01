@@ -82,7 +82,9 @@ try {
 
         obj1 = { test: 1 };
         obj2 = { test: 1 };
-      }
+      },
+      30,
+      'node'
     );
 
     console.log(`getMetadata('instance')`, getMetadata('instance'));

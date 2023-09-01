@@ -7,7 +7,8 @@ This function will repeatedly call the callback function, record heap usage, and
 ```ts
  testMemoryLeak (
     callback: CB,
-    iteration: number // default iteration is 20
+    iteration: number,// default iteration is 20
+    engine: 'node' | 'browser'
   )
 ```
 

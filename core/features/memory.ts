@@ -1,5 +1,6 @@
 import { filter, head, isNumber, isUndefined, trim } from 'lodash';
-import { IRewipeMemoryInfo, RewipeSupportedEngine } from '../types';
+import { IRewipeMemoryInfo } from 'types';
+import { RewipeSupportedEngine } from 'types/engine';
 import { isBrowserEnvironment, isNodeJsEnvironment } from './engine';
 
 /**
@@ -7,12 +8,12 @@ import { isBrowserEnvironment, isNodeJsEnvironment } from './engine';
  * @returns
  */
 export const getMemoryUsage = async (
-  engine?: RewipeSupportedEngine | undefined
+  engineType?: RewipeSupportedEngine
 ): Promise<IRewipeMemoryInfo> => {
   try {
     const isBrowser =
-      engine === RewipeSupportedEngine.browser ||
-      (engine !== RewipeSupportedEngine.node && isBrowserEnvironment());
+      engineType === 'browser' ||
+      (engineType !== 'node' && isBrowserEnvironment());
 
     if (isBrowser) {
       // eslint-disable-next-line
@@ -60,7 +61,7 @@ export const getMemoryUsage = async (
       };
     }
 
-    let isNodeJs: boolean | undefined = engine === RewipeSupportedEngine.node;
+    let isNodeJs: boolean | undefined = engineType === 'node';
 
     if (!isNodeJs) {
       // gc
