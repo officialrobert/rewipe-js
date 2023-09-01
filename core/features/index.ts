@@ -1,5 +1,5 @@
 import { getRewipeStorage, init } from '../store';
-import { head, isArray, isEmpty, isNumber, last, size } from 'lodash';
+import { head, isArray, isEmpty, isNumber, isObject, last, size } from 'lodash';
 import {
   IRewipeCoreConfig,
   IRewipeEndParams,
@@ -96,29 +96,37 @@ export const clearEvent = (eventName: string) => {
   }
 };
 
-export const getEventMemoryInsights = (eventPayload: IRewipeEvent): string => {
+export const getEventMemoryInsights = (
+  param: IRewipeEvent | IRewipeEvent[]
+): string => {
   try {
-    const { start, end, eventName } = eventPayload;
-    const { usedHeap: startUsedHeap = 0 } = start;
-    const { usedHeap: endUsedHeap = 0 } = end || {};
+    const eventPayload = isArray(param) ? last(param) : param;
 
-    const diffMeta = computePercentDifferenceAndType(
-      startUsedHeap as number,
-      endUsedHeap as number
-    );
-    const totalBytesDifference = endUsedHeap - startUsedHeap;
+    if (eventPayload && isObject(eventPayload)) {
+      const { start, end, eventName } = eventPayload;
+      const { usedHeap: startUsedHeap = 0 } = start;
+      const { usedHeap: endUsedHeap = 0 } = end || {};
 
-    if (diffMeta?.type === 'increase') {
-      return `${eventName}: ${diffMeta?.percent?.toFixed(
-        2
-      )}% increase. Total bytes - ${totalBytesDifference}`;
-    } else if (diffMeta?.type === 'decrease') {
-      return `${eventName}: ${diffMeta?.percent?.toFixed(
-        2
-      )}% decrease. Total bytes - ${totalBytesDifference}`;
-    } else {
-      return `${eventName}: No change`;
+      const diffMeta = computePercentDifferenceAndType(
+        startUsedHeap as number,
+        endUsedHeap as number
+      );
+      const totalBytesDifference = endUsedHeap - startUsedHeap;
+
+      if (diffMeta?.type === 'increase') {
+        return `${eventName}: ${diffMeta?.percent?.toFixed(
+          2
+        )}% increase. Total bytes - ${totalBytesDifference}`;
+      } else if (diffMeta?.type === 'decrease') {
+        return `${eventName}: ${diffMeta?.percent?.toFixed(
+          2
+        )}% decrease. Total bytes - ${totalBytesDifference}`;
+      } else {
+        return `${eventName}: No change`;
+      }
     }
+
+    throw new Error('Missing eventPayload');
   } catch (err: any) {
     return `Failed getEventMemoryInsights() err: ${err?.message}`;
   }
