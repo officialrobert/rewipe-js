@@ -45,7 +45,11 @@ class RuntimeStorage {
       isNumber(params?.eventsListCountLimit) &&
       params?.eventsListCountLimit > 1
     ) {
-      this.eventsListCountLimit = params.eventsListCountLimit;
+      if (params?.eventsListCountLimit > 100) {
+        this.eventsListCountLimit = 100;
+      } else {
+        this.eventsListCountLimit = params.eventsListCountLimit;
+      }
     }
   }
 
