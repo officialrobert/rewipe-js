@@ -6,6 +6,8 @@ const {
   trackMemoryAndPromise,
   testMemoryLeak,
   getMetadata,
+  getConsumedMemory,
+  getEventMemoryInsights,
 } = require('../../dist');
 const { timeout } = require('./utils');
 
@@ -23,12 +25,6 @@ const start = async (iteration = 1) => {
   obj2 = { test: 1 };
 
   await end({ id, eventName });
-
-  // const memInfo = getEvent(eventName);
-  // console.log('evt id', id, 'memInfo', memInfo);
-  // console.log('\n\n');
-  // console.log(getEventMemoryInsights(memInfo[0]));
-  // console.log('\n\n');
 };
 
 const testTrackMemoryAndPromise = async () => {
@@ -49,7 +45,7 @@ try {
     config({
       environment: 'development',
       eventsListCountLimit: 3,
-      verbose: true,
+      verbose: false,
       metadata: {
         instance: 'instance0001',
       },
@@ -59,6 +55,19 @@ try {
     await timeout(1_500);
     await start(1);
     await testTrackMemoryAndPromise();
+
+    const eventName = `StartTest${1}Event`;
+    console.log('\n\n');
+    console.log(
+      'getEventMemoryInsights -',
+      getEventMemoryInsights(getEvent(eventName))
+    );
+    console.log(
+      'getConsumedMemory -',
+      eventName,
+      getConsumedMemory(getEvent(eventName))
+    );
+    console.log('\n\n');
 
     const { memoryConsumed, memoryInsights } = await testMemoryLeak(
       async () => {
@@ -74,7 +83,6 @@ try {
     );
 
     console.log(`getMetadata('instance')`, getMetadata('instance'));
-    console.log(`getMetadata('none')`, getMetadata('none'));
     console.log('memoryConsumed:', memoryConsumed);
     console.log('\n');
     console.log('memoryInsights:\n');
