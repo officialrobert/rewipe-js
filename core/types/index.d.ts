@@ -4,6 +4,11 @@ export enum IRewipeEnvironment {
   stage = 'stage',
 }
 
+export enum RewipeSupportedEngine {
+  browser = 'browser',
+  node = 'node',
+}
+
 export enum RewipeEventRecordsFormat {
   json = 'json',
   array = 'array',

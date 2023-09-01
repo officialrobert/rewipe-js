@@ -6,6 +6,7 @@ import {
   IRewipeEvent,
   IRewipeRunParams,
   RewipeEventRecordsFormat,
+  RewipeSupportedEngine,
 } from '../types';
 import {
   InitConfigError,
@@ -187,7 +188,8 @@ export const testMemoryLeak = async function <
   CB extends (...args: any[]) => any
 >(
   callback: CB,
-  iteration = testMemoryLeakMinIteration
+  iteration = testMemoryLeakMinIteration,
+  engine?: RewipeSupportedEngine
 ): Promise<{ memoryConsumed: number; memoryInsights: string }> {
   const memos = [];
   const rewipeStorage = getRewipeStorage();
@@ -199,7 +201,7 @@ export const testMemoryLeak = async function <
   }
 
   for (let i = 0; i < iteration; i++) {
-    const memoryInfoStart = await getMemoryUsage();
+    const memoryInfoStart = await getMemoryUsage(engine);
     const result = callback();
 
     if (result instanceof Promise) {
@@ -210,7 +212,7 @@ export const testMemoryLeak = async function <
       throw new RewipeUnsupportedError('Rewipejs engine not supported');
     }
 
-    const memoryInfoEnd = await getMemoryUsage();
+    const memoryInfoEnd = await getMemoryUsage(engine);
 
     memos.push({
       start: memoryInfoStart,
