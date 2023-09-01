@@ -7,6 +7,8 @@ RewipeJS - Easily track and kill memory leak
 > - Enable developers to track memory usage from JavaScript runtime (backend or frontend)
 > - Github Action integration so developers can test increase/decrease in memory usage for each PR that gets merged
 
+<img src="https://github.com/officialrobert/rewipe-js/blob/main/docs/rewipe-cover.png" width="100%" height="auto"/>
+
 ## Install
 
 ```js
