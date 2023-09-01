@@ -46,7 +46,7 @@ test('Should not consume more than 1MB', async () => {
 
 ## How it works (advanced)
 
-You can use this library for record-keeping. You can keep the payload and log it using [**Sentry**](https://sentry.io/welcome/) or [**Posthog**](https://posthog.com/)
+You can use this library for record-keeping. You can keep the payload using [**Sentry**](https://sentry.io/welcome/) or [**Posthog**](https://posthog.com/)
 
 ```js
 import * rewipe from 'rewipe-js';
