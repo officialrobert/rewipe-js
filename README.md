@@ -126,8 +126,8 @@ app.post('/test-endpoint', async (req, res, next) => {
       eventName,
     });
 
-    const memoryEventPayload = rewipe.getEvent(eventName)[0];
-    const consumed = rewipe.getConsumedMemory(memoryEventPayload);
+    const memoryEventInfo = rewipe.getEvent(eventName);
+    const consumed = rewipe.getConsumedMemory(memoryEventInfo);
 
     console.log(consumed);
     // in bytes
@@ -140,7 +140,7 @@ app.post('/test-endpoint', async (req, res, next) => {
     //   message: `File upload took ${rewipe.readableMemory(consumed)}`,
     // });
 
-    console.log(rewipe.getEventMemoryInsights(memoryEventPayload));
+    console.log(rewipe.getEventMemoryInsights(memoryEventInfo));
     // log: 15% heap memory increase
   } catch (err) {
     next(err);
