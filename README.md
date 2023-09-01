@@ -44,7 +44,7 @@ test('Should not consume more than 1MB', async () => {
 
 ## How it works (advanced)
 
-You can also use this library for record-keeping.
+You can use this library for record-keeping. You can keep the payload and log it using [**Sentry**](https://sentry.io/welcome/) or [**Posthog**](https://posthog.com/)
 
 ```js
 import * rewipe from 'rewipe-js';
@@ -73,12 +73,13 @@ const onSubmitCheckout = async (e) => {
 };
 ```
 
-> Manual track or you can check from an intuitive dashboard at `rewipe.run(soon)`
+## Track your event's memory heap
 
 ```js
 const info = rewipe.getEvent('SubmitCheckout');
-// console.log(info[0]);
+const sampleInfoPayload = info[0];
 
+console.log(sampleInfoPayload);
 // sample log data
 const sampleInfoPayload = {
   id: 'xx-xx-unique-id',
