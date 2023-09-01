@@ -29,8 +29,8 @@ test('Should not consume more than 1MB', async () => {
     () => {
       Store.save('foo', { foo: 'bar' });
     },
-    30,
-    'node'
+    30, // iterations
+    'node' // 'node' or 'browser'
   );
 
   // memoryConsumed in bytes
