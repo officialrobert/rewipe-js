@@ -24,7 +24,7 @@ class RuntimeStorage {
   apiKey: string;
   environment: IRewipeEnvironment | string;
   projectId: string;
-  eventsListCountLimit: number = 1;
+  eventsListCountLimit: number = 2;
   eventsRecord: Record<string, IRewipeEvent[]> = {};
   verbose?: boolean | undefined;
   startMemoryInfo?: IRewipeMemoryInfo | null | undefined;
@@ -43,7 +43,7 @@ class RuntimeStorage {
 
     if (
       isNumber(params?.eventsListCountLimit) &&
-      params?.eventsListCountLimit > 0
+      params?.eventsListCountLimit > 1
     ) {
       this.eventsListCountLimit = params.eventsListCountLimit;
     }

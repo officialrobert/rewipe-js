@@ -1,5 +1,5 @@
 import { getRewipeStorage, init } from '../store';
-import { head, isEmpty, isNumber, last, size } from 'lodash';
+import { head, isArray, isEmpty, isNumber, last, size } from 'lodash';
 import {
   IRewipeCoreConfig,
   IRewipeEndParams,
@@ -147,14 +147,34 @@ export const trackMemoryAndPromise = function <
   };
 };
 
-export const getConsumedMemory = (eventPayload: IRewipeEvent): number => {
-  const { start, end } = eventPayload;
-  const { usedHeap: startUsedHeap = 0 } = start;
-  const { usedHeap: endUsedHeap = 0 } = end || {};
+export const getConsumedMemory = (
+  param: IRewipeEvent | IRewipeEvent[]
+): number | undefined => {
+  let eventPayload: IRewipeEvent | null | undefined = null;
 
-  return endUsedHeap - startUsedHeap;
+  if (isArray(param)) {
+    eventPayload = last(param);
+  } else if (!isEmpty(param) && param?.start) {
+    eventPayload = param;
+  }
+
+  if (eventPayload && !isEmpty(eventPayload)) {
+    const { start, end } = eventPayload;
+    const { usedHeap: startUsedHeap = 0 } = start;
+    const { usedHeap: endUsedHeap = 0 } = end || {};
+
+    return endUsedHeap - startUsedHeap;
+  }
+
+  return undefined;
 };
 
+/**
+ * Test and track your app's heap memory footprint
+ * @param callback
+ * @param iteration
+ * @returns memoryInsights - Human readable generated insights that will prompt if there's a possible memory leak
+ */
 export const testMemoryLeak = async function <
   CB extends (...args: any[]) => any
 >(

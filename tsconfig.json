@@ -10,7 +10,7 @@
     "strict": true,
     "lib": ["esnext", "ES2017", "dom", "dom.iterable", "scripthost"]
   },
-  "include": ["core/**/*.ts"],
+  "include": ["core/**/*.ts", "index.d.ts", "core/types/index.d.ts"],
   "exclude": [
     "**/node_modules",
     "**/dist",

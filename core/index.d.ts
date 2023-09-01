@@ -1,3 +1,12 @@
+import {
+  IRewipeCoreConfig,
+  IRewipeRunParams,
+  IRewipeEndParams,
+  IRewipeEvent,
+  RewipeEventRecordsFormat,
+} from './types/index';
+import { RuntimeStorage } from './store';
+
 declare module 'rewipe-js' {
   export function config(params: IRewipeCoreConfig): void;
 
@@ -25,7 +34,9 @@ declare module 'rewipe-js' {
     callback: CB
   ): (...args: Parameters<CB>) => Promise<ReturnType<CB>>;
 
-  export function getConsumedMemory(eventPayload: IRewipeEvent): number;
+  export function getConsumedMemory(
+    eventPayload: IRewipeEvent | IRewipeEvent[]
+  ): number | undefined;
 
   export function readableMemory(memoryInBytes: number): string;
 
