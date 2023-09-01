@@ -116,11 +116,11 @@ export const getEventMemoryInsights = (
       if (diffMeta?.type === 'increase') {
         return `${eventName}: ${diffMeta?.percent?.toFixed(
           2
-        )}% increase. Total bytes - ${totalBytesDifference}`;
+        )}% increase. Total consumed in bytes - ${totalBytesDifference}`;
       } else if (diffMeta?.type === 'decrease') {
         return `${eventName}: ${diffMeta?.percent?.toFixed(
           2
-        )}% decrease. Total bytes - ${totalBytesDifference}`;
+        )}% decrease. Total consumed in bytes - ${totalBytesDifference}`;
       } else {
         return `${eventName}: No change`;
       }
