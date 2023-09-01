@@ -57,6 +57,9 @@ try {
     await testTrackMemoryAndPromise();
 
     const eventName = `StartTest${1}Event`;
+    const memInfo = getEvent(eventName);
+
+    console.log('memInfo', memInfo);
     console.log('\n\n');
     console.log(
       'getEventMemoryInsights -',
