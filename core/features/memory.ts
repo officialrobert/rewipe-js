@@ -1,6 +1,5 @@
 import { filter, head, isNumber, isUndefined, trim } from 'lodash';
 import { IRewipeMemoryInfo } from 'types';
-import { RewipeSupportedEngine } from 'types/engine';
 import { isBrowserEnvironment, isNodeJsEnvironment } from './engine';
 
 /**
@@ -8,7 +7,7 @@ import { isBrowserEnvironment, isNodeJsEnvironment } from './engine';
  * @returns
  */
 export const getMemoryUsage = async (
-  engineType?: RewipeSupportedEngine
+  engineType?: 'node' | 'browser'
 ): Promise<IRewipeMemoryInfo> => {
   try {
     const isBrowser =

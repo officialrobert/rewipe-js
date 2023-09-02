@@ -7,7 +7,6 @@ import {
   IRewipeRunParams,
   RewipeEventRecordsFormat,
 } from '../types';
-import { RewipeSupportedEngine } from '../types/engine';
 import {
   InitConfigError,
   RewipeUnsupportedError,
@@ -189,7 +188,7 @@ export const testMemoryLeak = async function <
 >(
   callback: CB,
   iteration = testMemoryLeakMinIteration,
-  engine?: RewipeSupportedEngine
+  engine?: 'node' | 'browser'
 ): Promise<{ memoryConsumed: number; memoryInsights: string }> {
   const memos = [];
   const rewipeStorage = getRewipeStorage();
