@@ -11,6 +11,7 @@ export {
   testMemoryLeak,
   getConsumedMemory,
   getMetadata,
+  memoryUsageFromStartToThisPoint,
 } from './features';
 export { readableMemory } from './features/utils';
 export { rewipeEnv } from './constants';

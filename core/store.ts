@@ -27,7 +27,10 @@ class RuntimeStorage {
   eventsListCountLimit: number = 2;
   eventsRecord: Record<string, IRewipeEvent[]> = {};
   verbose?: boolean | undefined;
-  startMemoryInfo?: IRewipeMemoryInfo | null | undefined;
+  startMemoryInfo?:
+    | (IRewipeMemoryInfo & { startTimeIso: string })
+    | null
+    | undefined;
   metadata?: Record<string, any>;
 
   constructor(params: IRewipeCoreConfig) {
@@ -179,7 +182,13 @@ class RuntimeStorage {
   };
 }
 
-const storage: { instance?: RuntimeStorage | null } = { instance: undefined };
+const storage: {
+  instance?: RuntimeStorage | null;
+  startMemoryInfo?:
+    | (IRewipeMemoryInfo & { startTimeIso: string })
+    | null
+    | undefined;
+} = { instance: undefined, startMemoryInfo: undefined };
 
 /**
  * Store initial memory so we can record and compare progress
@@ -187,16 +196,21 @@ const storage: { instance?: RuntimeStorage | null } = { instance: undefined };
 const storeInitialMemory = () => {
   getMemoryUsage()
     .then((memoryInfo) => {
-      if (storage.instance && !storage.instance?.startMemoryInfo) {
-        storage.instance.startMemoryInfo = memoryInfo;
+      if (storage && !storage.startMemoryInfo) {
+        storage.startMemoryInfo = {
+          ...memoryInfo,
+          startTimeIso: new Date().toISOString(),
+        };
       }
     })
     .catch((err) => {
-      if (storage?.instance?.verbose) {
-        console.log('Rewipejs: storeInitialMemory(): err:', err?.message);
-      }
+      console.error('Rewipejs: storeInitialMemory(): err:', err?.message);
     });
 };
+
+storeInitialMemory();
+
+export const getInitialMemoryInfo = () => storage?.startMemoryInfo;
 
 export const init = (params: RuntimeStorageParams) => {
   if (!storage.instance) {
@@ -205,8 +219,6 @@ export const init = (params: RuntimeStorageParams) => {
     }
 
     storage.instance = new RuntimeStorage(params);
-
-    storeInitialMemory();
   }
 };
 

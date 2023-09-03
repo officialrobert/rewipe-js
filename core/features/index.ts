@@ -1,11 +1,21 @@
-import { getRewipeStorage, init } from '../store';
-import { head, isArray, isEmpty, isNumber, isObject, last, size } from 'lodash';
+import { getInitialMemoryInfo, getRewipeStorage, init } from '../store';
+import {
+  floor,
+  head,
+  isArray,
+  isEmpty,
+  isNumber,
+  isObject,
+  last,
+  size,
+} from 'lodash';
 import {
   IRewipeCoreConfig,
   IRewipeEndParams,
   IRewipeEvent,
   IRewipeRunParams,
   RewipeEventRecordsFormat,
+  RewipeSupportedEngine,
 } from '../types';
 import {
   InitConfigError,
@@ -46,6 +56,36 @@ export const exportEventRecords = (
 };
 
 export const RewipeStorage = () => getRewipeStorage();
+
+export const memoryUsageFromStartToThisPoint = async (
+  engine?: RewipeSupportedEngine
+): Promise<
+  | { usedHeap: number; memory: string; totalDurationInSeconds: number }
+  | undefined
+> => {
+  const initialMemoryInfo = getInitialMemoryInfo();
+
+  if (initialMemoryInfo?.usedHeap) {
+    const { startTimeIso, usedHeap: initUsedHeap } = initialMemoryInfo;
+    const { usedHeap: recentUsedHeap } = await getMemoryUsage(engine);
+    const startDate = new Date(startTimeIso);
+    const nowMs = Date.now();
+    const startTimeMs = startDate.getTime();
+    const totalDurationInSeconds = floor((nowMs - startTimeMs) / 1000);
+
+    if (isNumber(recentUsedHeap) && recentUsedHeap > 0) {
+      const usedHeap = recentUsedHeap - initUsedHeap;
+
+      return {
+        usedHeap,
+        totalDurationInSeconds,
+        memory: readableMemory(usedHeap),
+      };
+    }
+  }
+
+  return undefined;
+};
 
 export const run = async (params: IRewipeRunParams): Promise<string> => {
   const { eventName, props } = params;

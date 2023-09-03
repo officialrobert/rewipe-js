@@ -4,6 +4,7 @@ import {
   IRewipeEndParams,
   IRewipeEvent,
   RewipeEventRecordsFormat,
+  RewipeSupportedEngine,
 } from './types/index';
 import { RuntimeStorage } from './store';
 
@@ -47,4 +48,11 @@ declare module 'rewipe-js' {
   ): Promise<{ memoryConsumed: number; memoryInsights: string }>;
 
   export function getMetadata(property: string): any;
+
+  export function memoryUsageFromStartToThisPoint(
+    engine?: RewipeSupportedEngine
+  ): Promise<
+    | { usedHeap: number; memory: string; totalDurationInSeconds: number }
+    | undefined
+  >;
 }

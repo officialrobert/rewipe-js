@@ -9,6 +9,8 @@ export enum RewipeEventRecordsFormat {
   array = 'array',
 }
 
+export type RewipeSupportedEngine = 'node' | 'browser';
+
 interface IRewipeMemoryInfo {
   unsupported: boolean;
   rss?: number;

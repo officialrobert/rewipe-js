@@ -8,6 +8,7 @@ const {
   getMetadata,
   getConsumedMemory,
   getEventMemoryInsights,
+  memoryUsageFromStartToThisPoint,
 } = require('../../dist');
 const { timeout } = require('./utils');
 
@@ -70,6 +71,7 @@ try {
       eventName,
       getConsumedMemory(getEvent(eventName))
     );
+
     console.log('\n\n');
 
     const { memoryConsumed, memoryInsights } = await testMemoryLeak(
@@ -92,6 +94,9 @@ try {
     console.log('\n');
     console.log('memoryInsights:\n');
     console.log(memoryInsights);
+    await timeout(1_500);
+    const consumedMemoryInfo = await memoryUsageFromStartToThisPoint();
+    console.log('memoryUsageFromStartToThisPoint()', consumedMemoryInfo);
   })();
 } catch (err) {
   console.log(err?.message);
